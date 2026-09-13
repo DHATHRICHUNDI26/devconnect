@@ -1,0 +1,27 @@
+{
+  "name": "nodejsproject",
+  "version": "1.0.0",
+  "description": "learning backend",
+  "homepage": "https://github.com/DHATHRICHUNDI26/simplenodebackend#readme",
+  "bugs": {
+    "url": "https://github.com/DHATHRICHUNDI26/simplenodebackend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DHATHRICHUNDI26/simplenodebackend.git"
+  },
+  "license": "ISC",
+  "author": "DHATHRI",
+  "main": "backend/src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node backend/src/index.js",
+    "dev": "nodemon backend/src/index.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.10.0"
+  }
+}
