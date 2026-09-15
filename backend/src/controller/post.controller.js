@@ -6,8 +6,8 @@ const createPost=async(req,res)=>{
         if(!name||!description||!age){
             return res.status(400).json({message:"All fields are important!!!"})
         }
-        const post=await Post.create({name,description,age})
-        return res.status(201).json({message:"post created successfully"})
+        const post=await Post.create({name,description,age,user:req.user.userId})
+        return res.status(201).json({message:"post created successfully",post})
     }catch(error){
         return res.status(500).json({message:"Internal server error",error:error.message})
     }
@@ -15,7 +15,7 @@ const createPost=async(req,res)=>{
 const getPosts=async(req,res)=>{
     try{
         const posts=await Post.find()
-        res.status(200).json(posts);
+        return res.status(200).json(posts);
     }
     catch(error){
         return res.status(500).json({message:"Internal server error"})
@@ -26,11 +26,15 @@ const updatePost=async(req,res)=>{
             if(Object.keys(req.body).length==0){
                 return res.status(400).json({message:"No data provided"});
             }
-            const post=await Post.findByIdAndUpdate(req.params.id,req.body,{new:true});
+            const post=await Post.findOneAndUpdate( {
+            _id:req.params.id,
+            user:req.user.userId
+            },
+            req.body,{new:true,runValidators:true});
             if(!post){
-                res.status(404).json({message:"post not found"});
+                return res.status(404).json({message:"post not found"});
             }
-            res.status(200).json({message:"post updated"});
+            return res.status(200).json({message:"post updated",post});
     }
     catch(error){
          return res.status(500).json({message:"Internal server error"})
@@ -39,11 +43,14 @@ const updatePost=async(req,res)=>{
 const deletePost=async(req,res)=>{
     try{
            
-            const deleted=await Post.findByIdAndUpdate(req.params.id);
+            const deleted=await Post.findOneAndDelete({
+                _id:req.params.id,
+                user:req.user.userId
+            });
             if(!deleted){
-                res.status(404).json({message:"post not found"});
+                return res.status(404).json({message:"post not found"});
             }
-            res.status(200).json({message:"post deleted"});
+            return res.status(200).json({message:"post deleted"});
     }
     catch(error){
          return res.status(500).json({message:"Internal server error"})

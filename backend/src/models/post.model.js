@@ -15,6 +15,11 @@ const postSchema=new Schema({
         required:true,
         min:1,
         max:150
+    },
+    user:{
+        type:Schema.Types.ObjectId,
+        ref:"User",
+        required:true
     }
 },
 {
