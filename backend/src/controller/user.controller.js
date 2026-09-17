@@ -7,9 +7,15 @@ const registerUser=async(req,res)=>{
         if(!username || !email || !password){
             return res.status(400).json({message:"All fields are important!!!"})
         }
-        const existing=await User.findOne({email:email.toLowerCase()});
-        if(existing){
+        const existingEmail=await User.findOne({email:email.toLowerCase()});
+        if(existingEmail){
             return res.status(400).json({message:"user already exists"});
+        }
+        const existingUsername=await User.findOne({
+            username:username.toLowerCase()
+        })
+        if(existingUsername){
+            return res.status(400).json({message:"username already exists"});
         }
         //create user
         const user=await User.create({
@@ -34,11 +40,11 @@ const loginUser=async(req,res)=>{
             email:email.toLowerCase()
         });
         if(!user)
-            return res.status(400).json({message:"user not found"})
+            return res.status(404).json({message:"Email does not exist"})
         const isMatch=await user.comparePassword(password);
         if(!isMatch)
-            return res.status(400).json({
-        message:"Invalid credintals"})
+            return res.status(401).json({
+        message:"Incorrect password"})
         const accessToken=jwt.sign(
             {userId:user._id},
             process.env. JWT_SECRET,
