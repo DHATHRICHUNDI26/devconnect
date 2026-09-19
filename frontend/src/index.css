@@ -91,3 +91,123 @@ button{
     color:#2563eb;
     text-decoration:none;
 }
+.dashboard{
+    min-height:100vh;
+    padding:30px 20px;
+    background:#f5f7f9;
+}
+
+.dashboard>h1{
+    text-align:center;
+    margin:0 0 25px;
+    font-size:30px;
+}
+
+.create-post-section{
+    width:600px;
+    margin:0 auto 25px;
+}
+
+.create-post-button{
+    display:block;
+    margin:auto;
+    padding:10px 18px;
+    border:none;
+    border-radius:8px;
+    background:#111;
+    color:white;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.create-post-form{
+    width:100%;
+    box-sizing:border-box;
+    padding:18px;
+    background:white;
+    border:1px solid #e1e4e8;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.06);
+}
+
+.create-post-form h2{
+    margin:0 0 15px;
+    font-size:20px;
+}
+
+.create-post-form input,
+.create-post-form textarea{
+    width:100%;
+    box-sizing:border-box;
+    padding:10px 12px;
+    margin-bottom:12px;
+    border:1px solid #d5d9dd;
+    border-radius:7px;
+    font-size:14px;
+    font-family:inherit;
+}
+
+.create-post-form textarea{
+    height:80px;
+    resize:none;
+}
+
+.create-post-form input:focus,
+.create-post-form textarea:focus{
+    outline:none;
+    border-color:#777;
+}
+
+.form-buttons{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+}
+
+.form-buttons button{
+    padding:9px 16px;
+    border:none;
+    border-radius:7px;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.cancel-button{
+    background:#eee;
+    color:#333;
+}
+
+.post-button{
+    background:#111;
+    color:white;
+}
+
+.posts-container{
+    width:600px;
+    margin:auto;
+}
+
+.post-card{
+    background:white;
+    border:1px solid #e1e4e8;
+    border-radius:10px;
+    padding:18px;
+    margin-bottom:15px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+
+.post-card h3{
+    margin:0 0 8px;
+    font-size:17px;
+}
+
+.post-card p{
+    margin:0 0 12px;
+    color:#444;
+    line-height:1.5;
+}
+
+.post-card span{
+    font-size:13px;
+    color:#777;
+}

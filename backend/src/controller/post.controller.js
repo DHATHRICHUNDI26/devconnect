@@ -2,11 +2,11 @@ import {Post} from "../models/post.model.js"
 
 const createPost=async(req,res)=>{
     try{
-        const {name,description,age}=req.body
-        if(!name||!description||!age){
+        const {name,description}=req.body
+        if(!name||!description){
             return res.status(400).json({message:"All fields are important!!!"})
         }
-        const post=await Post.create({name,description,age,user:req.user.userId})
+        const post=await Post.create({name,description,user:req.user.userId})
         return res.status(201).json({message:"post created successfully",post})
     }catch(error){
         return res.status(500).json({message:"Internal server error",error:error.message})
@@ -14,8 +14,8 @@ const createPost=async(req,res)=>{
 }
 const getPosts=async(req,res)=>{
     try{
-        const posts=await Post.find()
-        return res.status(200).json(posts);
+        const posts=await Post.find().populate("user","username")
+        return res.status(200).json( {posts});
     }
     catch(error){
         return res.status(500).json({message:"Internal server error"})
@@ -56,4 +56,19 @@ const deletePost=async(req,res)=>{
          return res.status(500).json({message:"Internal server error"})
     }
 }
-export {createPost,getPosts,updatePost,deletePost}
+const getMyPosts=async(req,res)=>{
+    try{
+        const posts=await Post.find({
+            user:req.user.userId
+        }).populate("user","username")
+
+        return res.status(200).json({
+            posts
+        })
+    }catch(error){
+        return res.status(500).json({
+            message:"Internal server error"
+        })
+    }
+}
+export {createPost,getPosts,updatePost,deletePost,getMyPosts}

@@ -10,16 +10,15 @@ const postSchema=new Schema({
         required:true,
         trim:true
     },
-    age:{
-        type:Number,
-        required:true,
-        min:1,
-        max:150
-    },
     user:{
         type:Schema.Types.ObjectId,
         ref:"User",
         required:true
+    }
+    likes:{
+        type:[Schema.Types.ObjectId],
+        ref:"User",
+        default:[]
     }
 },
 {
