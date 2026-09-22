@@ -1,5 +1,5 @@
 import {Router} from "express"
-import {createPost, deletePost, getPosts, updatePost,getMyPosts} from "../controller/post.controller.js"
+import {createPost, deletePost, getPosts, updatePost,getMyPosts,toggleLike} from "../controller/post.controller.js"
 import { verifyToken } from "../middleware/auth.middleware.js"
 const router=Router()
 
@@ -12,4 +12,5 @@ router.get("/getPosts",verifyToken,getPosts);
 router.patch("/update/:id",verifyToken,updatePost)
 router.delete("/delete/:id",verifyToken,deletePost)
 router.get("/my-posts",verifyToken,getMyPosts)
+router.post("/:postId/like",verifyToken,toggleLike)
 export default router

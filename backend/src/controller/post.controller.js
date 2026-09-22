@@ -71,4 +71,39 @@ const getMyPosts=async(req,res)=>{
         })
     }
 }
-export {createPost,getPosts,updatePost,deletePost,getMyPosts}
+const toggleLike=async(req,res)=>{
+    try{
+        const post=await Post.findById(req.params.postId)
+
+        if(!post){
+            return res.status(404).json({
+                message:"Post not found"
+            })
+        }
+
+        const userId=req.user.userId
+
+        const alreadyLiked=post.likes.includes(userId)
+
+        if(alreadyLiked){
+            post.likes=post.likes.filter(
+                (id)=>id.toString()!==userId.toString()
+            )
+        }else{
+            post.likes.push(userId)
+        }
+
+        await post.save()
+
+        return res.status(200).json({
+            message:alreadyLiked?"Post unliked":"Post liked",
+            liked:!alreadyLiked,
+            likesCount:post.likes.length
+        })
+    }catch(error){
+        return res.status(500).json({
+            message:"Internal server error"
+        })
+    }
+}
+export {createPost,getPosts,updatePost,deletePost,getMyPosts,toggleLike}

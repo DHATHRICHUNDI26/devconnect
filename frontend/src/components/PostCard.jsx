@@ -1,6 +1,12 @@
-import {useMemo} from "react"
-
+import {useMemo,useState} from "react"
+import {apiFetch} from "../utils/api.js"
 function PostCard({post}){
+    const [liked,setLiked]=useState(()=>{
+        const user=JSON.parse(localStorage.getItem("user"))
+        return post.likes?.some((id)=>id.toString()===user?.id?.toString())||false
+    })
+    const [likesCount,setLikesCount]=useState(post.likes?.length||0)
+    const [loading,setLoading]=useState(false)
     const timeAgo=useMemo(()=>{
         const seconds=Math.floor((Date.now()-new Date(post.createdAt).getTime())/1000)
 
@@ -34,6 +40,32 @@ function PostCard({post}){
 
         return new Date(post.createdAt).toLocaleDateString()
     },[post.createdAt])
+    const toggleLike=async()=>{
+        if(loading) return
+
+        try{
+            setLoading(true)
+
+            const response=await apiFetch(`http://localhost:4000/api/v1/posts/${post._id}/like`,{
+                method:"POST"
+            })
+
+            const data=await response.json()
+
+            if(!response.ok){
+                console.error(data.message)
+                return
+            }
+
+            setLiked(data.liked)
+            setLikesCount(data.likesCount)
+        }catch(error){
+            console.error(error)
+        }finally{
+            setLoading(false)
+        }
+
+    }
 
     return(
         <div className="post-card">
@@ -41,6 +73,12 @@ function PostCard({post}){
             <h3>{post.name}</h3>
             <p>{post.description}</p>
             <span>{timeAgo}</span>
+             <div>
+                <button onClick={toggleLike} disabled={loading}>
+                    {liked?"❤️ Liked":"🤍 Like"}
+                </button>
+                <span>{likesCount}</span>
+                </div>
         </div>
     )
 }
