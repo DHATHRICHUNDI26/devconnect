@@ -1,4 +1,5 @@
 import {User} from "../models/user.model.js"
+import {Post} from "../models/post.model.js"
 import { RefreshToken } from "../models/refreshToken.model.js";
 import jwt from "jsonwebtoken"
 const registerUser=async(req,res)=>{
@@ -120,9 +121,67 @@ const logoutuser=async (req,res)=>{
         })
     }
 }
+const searchUsers=async(req,res)=>{
+    try{
+        const {username}=req.query
+
+        if(!username?.trim()){
+            return res.status(200).json({
+                users:[]
+            })
+        }
+
+        const users=await User.find({
+            username:{
+                $regex:username.trim(),
+                $options:"i"
+            }
+        }).select("_id username")
+
+        return res.status(200).json({
+            users
+        })
+    }catch(error){
+        return res.status(500).json({
+            message:"Internal server error"
+        })
+    }
+}
+const getUserProfile=async(req,res)=>{
+    try{
+        const user=await User.findById(req.params.userId).select("_id username email")
+
+        if(!user){
+            return res.status(404).json({
+                message:"User not found"
+            })
+        }
+
+        const posts=await Post.find({
+            user:req.params.userId
+        }).sort({createdAt:-1})
+
+        return res.status(200).json({
+            user,
+            posts
+        })
+    }catch(error){
+        if(error.name==="CastError"){
+            return res.status(400).json({
+                message:"Invalid user ID"
+            })
+        }
+
+        return res.status(500).json({
+            message:"Internal server error"
+        })
+    }
+}
 export {
     registerUser,
     loginUser,
     refreshAccessToken,
-    logoutuser
+    logoutuser,
+    searchUsers,
+    getUserProfile
 }

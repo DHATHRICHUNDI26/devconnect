@@ -138,64 +138,81 @@ function PostCard({post}){
     return(
         <div className="post-card">
             <h4>{post.user?.username||"Unknown user"}</h4>
+
             <h3>{post.name}</h3>
+
             <p>{post.description}</p>
-            <span>{timeAgo}</span>
+
+            <span className="post-time">{timeAgo}</span>
 
             <div className="post-actions">
-                <button onClick={toggleLike} disabled={loading}>
-                    {liked?"❤️ Liked":"🤍 Like"}
+                <button
+                    className={`like-button ${liked?"liked":""}`}
+                    onClick={toggleLike}
+                    disabled={loading}
+                >
+                    <span className="action-icon">
+                        {liked?"❤️":"♡"}
+                    </span>
+                    <span>Like</span>
+                    <span className="action-count">
+                        {likesCount}
+                    </span>
                 </button>
-                <span>{likesCount}</span>
+
+                <button
+                    className="comment-button"
+                    onClick={toggleComments}
+                >
+                    <span className="action-icon">💬</span>
+                    <span>
+                        {showComments?"Hide comments":"Comments"}
+                    </span>
+                    <span className="action-count">
+                        {comments.length}
+                    </span>
+                </button>
             </div>
 
-            <div className="comments-toggle">
-                <button onClick={toggleComments}>
-                    {showComments
-                        ? "Hide comments"
-                        : comments.length>0
-                            ? `View all ${comments.length} comments`
-                            : "View comments"
-                    }
-                </button>
-
-                {showComments && (
-                    <div className="comments-section">
-                        <div className="comments-list">
-                            {comments.length===0 ? (
-                                <p className="no-comments">
-                                    No comments yet. Be the first to comment.
-                                </p>
-                            ) : (
-                                comments.map((comment)=>(
-                                    <div className="comment" key={comment._id}>
-                                        <strong>
-                                            {comment.user?.username||"Unknown user"}
-                                        </strong>
-                                        <p>{comment.content}</p>
-                                    </div>
-                                ))
-                            )}
-                        </div>
-
-                        <div className="comment-form">
-                            <input
-                                type="text"
-                                value={commentText}
-                                onChange={(e)=>setCommentText(e.target.value)}
-                                placeholder="Add a comment..."
-                            />
-
-                            <button
-                                onClick={addComment}
-                                disabled={commentLoading}
-                            >
-                                {commentLoading?"Posting...":"Post"}
-                            </button>
-                        </div>
+            {showComments&&(
+                <div className="comments-section">
+                    <div className="comments-list">
+                        {comments.length===0?(
+                            <p className="no-comments">
+                                No comments yet. Be the first to comment.
+                            </p>
+                        ):(
+                            comments.map((comment)=>(
+                                <div
+                                    className="comment"
+                                    key={comment._id}
+                                >
+                                    <strong>
+                                        {comment.user?.username||"Unknown user"}
+                                    </strong>
+                                    <p>{comment.content}</p>
+                                </div>
+                            ))
+                        )}
                     </div>
-                )}
-            </div>
+
+                    <div className="comment-form">
+                        <input
+                            type="text"
+                            value={commentText}
+                            onChange={(e)=>setCommentText(e.target.value)}
+                            placeholder="Add a comment..."
+                        />
+
+                        <button
+                            onClick={addComment}
+                            disabled={commentLoading}
+                        >
+                            {commentLoading?"Posting...":"Post"}
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/profile";
+import UserProfile from "./pages/UserProfile"
 import ProtectedRoute from "./components/ProtectedRoute";
 function app(){
   return (
@@ -25,6 +26,14 @@ function app(){
         </ProtectedRoute>
       }
       />
+      <Route
+    path="/profile/:userId"
+    element={
+        <ProtectedRoute>
+            <UserProfile/>
+        </ProtectedRoute>
+    }
+  />
     </Routes>
     </BrowserRouter>
   )

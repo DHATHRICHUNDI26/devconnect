@@ -10,6 +10,8 @@ function Dashboard(){
     const [name,setName]=useState("")
     const [description,setDescription]=useState("")
     const [showForm,setShowForm]=useState(false)
+    const [search,setSearch]=useState("")
+    const [users,setUsers]=useState([])
 
     useEffect(()=>{
         const getPosts=async()=>{
@@ -66,6 +68,32 @@ function Dashboard(){
         setError("Failed to connect to the server")
     }
 }
+const searchUsers=async(value)=>{
+    setSearch(value)
+
+    if(!value.trim()){
+        setUsers([])
+        return
+    }
+
+    try{
+        const response=await apiFetch(`http://localhost:4000/api/v1/users/search?username=${encodeURIComponent(value)}`,{
+            method:"GET"
+        })
+
+        const data=await response.json()
+
+        if(!response.ok){
+            setUsers([])
+            return
+        }
+
+        setUsers(data.users)
+    }catch(error){
+        console.error(error)
+        setUsers([])
+    }
+}
 const logout=async()=>{
     try{
         const refreshToken=localStorage.getItem("refreshToken")
@@ -93,14 +121,45 @@ const logout=async()=>{
 }
     return(
     <div className="dashboard">
-        <h1>DevConnect</h1>
         <div className="dashboard-header">
     <h1>DevConnect</h1>
+
+    <div className="user-search">
+        <input
+            type="text"
+            value={search}
+            onChange={(e)=>searchUsers(e.target.value)}
+            placeholder="Search users..."
+        />
+
+        {search.trim()&&(
+            <div className="search-results">
+                {users.length===0?(
+                    <p>No users found</p>
+                ):(
+                    users.map((user)=>(
+                        <div
+    className="search-user"
+    key={user._id}
+    onClick={()=>navigate(`/profile/${user._id}`)}
+>
+                    <div className="profile-avatar">
+        {user.username.charAt(0).toUpperCase()}
+                         </div>
+                <span>{user.username}</span>
+            </div>
+                    ))
+                )}
+            </div>
+        )}
+    </div>
+
     <button onClick={()=>navigate("/profile")}>
         Profile
     </button>
+
     <button onClick={logout}>Logout</button>
-    </div>
+</div>
         <div className="create-post-section">
             {!showForm&&(
                 <button
