@@ -11,7 +11,17 @@ function Profile(){
         description:""
     })
 
-    const user=JSON.parse(localStorage.getItem("user"))
+   let user=null
+
+try{
+    const storedUser=localStorage.getItem("user")
+
+    if(storedUser){
+        user=JSON.parse(storedUser)
+    }
+    }catch(error){
+    console.error("Invalid user data",error)
+    }
 
     useEffect(()=>{
         const getMyPosts=async()=>{
@@ -44,6 +54,7 @@ function Profile(){
     }
 
     const deletePost=async(postId)=>{
+        setError("")
         try{
             const response=await apiFetch(`http://localhost:4000/api/v1/posts/delete/${postId}`,{
                 method:"DELETE"
@@ -61,6 +72,7 @@ function Profile(){
     }
 
     const updatePost=async()=>{
+        setError("")
         try{
             const response=await apiFetch(`http://localhost:4000/api/v1/posts/update/${editingPostId}`,{
                 method:"PATCH",

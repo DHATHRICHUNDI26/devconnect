@@ -1,8 +1,9 @@
-import mongoose,{Schema} from "mongoose";
+import mongoose,{Schema} from "mongoose"
+
 const commentSchema=new Schema({
     content:{
-        Type:String,
-        Required:true,
+        type:String,
+        required:true,
         trim:true
     },
     user:{
@@ -18,4 +19,5 @@ const commentSchema=new Schema({
 },{
     timestamps:true
 })
+
 export const Comment=mongoose.model("Comment",commentSchema)
