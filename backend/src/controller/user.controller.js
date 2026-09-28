@@ -34,6 +34,30 @@ const registerUser=async(req,res)=>{
         
     }
 }
+const checkEmail=async(req,res)=>{
+    try{
+        const {email}=req.query
+
+        if(!email?.trim()){
+            return res.status(200).json({
+                available:true
+            })
+        }
+
+        const user=await User.findOne({
+            email:email.trim().toLowerCase()
+        })
+
+        return res.status(200).json({
+            available:!user
+        })
+    }catch(error){
+        console.error(error)
+        return res.status(500).json({
+            message:"Internal server error"
+        })
+    }
+}
 const loginUser=async(req,res)=>{
     try {
         const {email,password}=req.body;
@@ -183,5 +207,6 @@ export {
     refreshAccessToken,
     logoutuser,
     searchUsers,
-    getUserProfile
+    getUserProfile,
+    checkEmail
 }

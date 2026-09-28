@@ -829,3 +829,20 @@ button{
     font-size:13px;
     color:#9ca3af;
 }
+.validation-error{
+    margin:-6px 0 10px;
+    color:#dc2626;
+    font-size:13px;
+}
+
+.validation-success{
+    margin:-6px 0 10px;
+    color:#16a34a;
+    font-size:13px;
+}
+
+.validation-message{
+    margin:-6px 0 10px;
+    color:#6b7280;
+    font-size:13px;
+}
