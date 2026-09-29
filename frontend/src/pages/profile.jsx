@@ -29,7 +29,7 @@ try{
     useEffect(()=>{
         const getMyPosts=async()=>{
             try{
-                const response=await apiFetch("http://localhost:4000/api/v1/posts/my-posts",{
+                const response=await apiFetch(`${API_URL}/api/v1/posts/my-posts`,{
                     method:"GET"
                 })
                 const data=await response.json()
@@ -59,7 +59,7 @@ try{
     const deletePost=async(postId)=>{
         setError("")
         try{
-            const response=await apiFetch(`http://localhost:4000/api/v1/posts/delete/${postId}`,{
+            const response=await apiFetch(`${API_URL}/api/v1/posts/delete/${postId}`,{
                 method:"DELETE"
             })
             const data=await response.json()

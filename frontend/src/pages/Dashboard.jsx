@@ -45,7 +45,7 @@ function Dashboard(){
     }
     const createPost=async()=>{
     try{
-        const response=await apiFetch("http://localhost:4000/api/v1/posts/create",{
+        const response=await apiFetch(`${API_URL}/api/v1/posts/create`,{
             method:"POST",
             headers:{
                 "Content-Type":"application/json"
