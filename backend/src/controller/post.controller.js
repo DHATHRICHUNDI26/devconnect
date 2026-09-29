@@ -14,11 +14,51 @@ const createPost=async(req,res)=>{
 }
 const getPosts=async(req,res)=>{
     try{
-        const posts=await Post.find().populate("user","username")
-        return res.status(200).json( {posts});
-    }
-    catch(error){
-        return res.status(500).json({message:"Internal server error"})
+        const posts=await Post.aggregate([
+            {
+                $lookup:{
+                    from:"users",
+                    localField:"user",
+                    foreignField:"_id",
+                    as:"user"
+                }
+            },
+            {
+                $unwind:"$user"
+            },
+            {
+                $lookup:{
+                    from:"comments",
+                    localField:"_id",
+                    foreignField:"post",
+                    as:"comments"
+                }
+            },
+            {
+                $addFields:{
+                    commentsCount:{
+                        $size:"$comments"
+                    }
+                }
+            },
+            {
+                $project:{
+                    comments:0,
+                    "user.password":0
+                }
+            },
+            {
+                $sort:{
+                    createdAt:-1
+                }
+            }
+        ])
+
+        return res.status(200).json({posts})
+    }catch(error){
+        return res.status(500).json({
+            message:"Internal server error"
+        })
     }
 }
 const updatePost=async(req,res)=>{

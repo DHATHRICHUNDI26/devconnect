@@ -1,6 +1,7 @@
 import {useEffect,useState} from "react"
 import {useNavigate,useParams} from "react-router-dom"
 import {apiFetch} from "../utils/api.js"
+import API_URL from "../utils/config.js"
 
 function UserProfile(){
     const {userId}=useParams()
@@ -14,7 +15,7 @@ function UserProfile(){
     useEffect(()=>{
         const getUserProfile=async()=>{
             try{
-                const response=await apiFetch(`http://localhost:4000/api/v1/users/${userId}`,{
+                const response=await apiFetch(`${API_URL}/api/v1/users/${userId}`,{
                     method:"GET"
                 })
 

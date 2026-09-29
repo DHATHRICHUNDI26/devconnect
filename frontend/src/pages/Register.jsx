@@ -1,5 +1,6 @@
 import {useEffect,useState} from "react"
 import {Link,useNavigate} from "react-router-dom"
+import API_URL from "../utils/config"
 
 function Register(){
     const [username,setUsername]=useState("")
@@ -22,7 +23,7 @@ function Register(){
 
         const timer=setTimeout(async()=>{
             try{
-                const response=await fetch(`http://localhost:4000/api/v1/users/check-email?email=${encodeURIComponent(email)}`)
+                const response=await fetch(`${API_URL}/api/v1/users/check-email?email=${encodeURIComponent(email)}`)
                 const data=await response.json()
 
                 if(!response.ok){
@@ -100,7 +101,7 @@ function Register(){
         }
 
         try{
-            const response=await fetch("http://localhost:4000/api/v1/users/register",{
+            const response=await fetch(`${API_URL}/api/v1/users/register`,{
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"

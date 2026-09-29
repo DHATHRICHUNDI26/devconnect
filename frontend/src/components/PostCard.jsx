@@ -1,5 +1,6 @@
-import {useMemo,useState} from "react"
+import {useEffect,useMemo,useState} from "react"
 import {apiFetch} from "../utils/api.js"
+import API_URL from "../utils/config.js"
 
 function PostCard({post}){
     const [liked,setLiked]=useState(()=>{
@@ -10,43 +11,53 @@ function PostCard({post}){
     const [comments,setComments]=useState([])
     const [commentText,setCommentText]=useState("")
     const [commentLoading,setCommentLoading]=useState(false)
-    const [likesCount,setLikesCount]=useState(post.likes?.length||0)
     const [loading,setLoading]=useState(false)
     const [showComments,setShowComments]=useState(false)
+    const [likesCount,setLikesCount]=useState(post.likes?.length||0)
+    const [commentsCount,setCommentsCount]=useState(post.commentsCount||0)
+   const [now,setNow]=useState(()=>Date.now())
 
-    const timeAgo=useMemo(()=>{
-        const seconds=Math.floor((Date.now()-new Date(post.createdAt).getTime())/1000)
+useEffect(()=>{
+    const timer=setInterval(()=>{
+        setNow(Date.now())
+    },60000)
 
-        if(seconds<60){
-            return "just now"
-        }
+    return()=>clearInterval(timer)
+},[])
 
-        const minutes=Math.floor(seconds/60)
+const timeAgo=useMemo(()=>{
+    const seconds=Math.floor((now-new Date(post.createdAt).getTime())/1000)
 
-        if(minutes<60){
-            return `${minutes} ${minutes===1?"minute":"minutes"} ago`
-        }
+    if(seconds<60){
+        return "just now"
+    }
 
-        const hours=Math.floor(minutes/60)
+    const minutes=Math.floor(seconds/60)
 
-        if(hours<24){
-            return `${hours} ${hours===1?"hour":"hours"} ago`
-        }
+    if(minutes<60){
+        return `${minutes} ${minutes===1?"minute":"minutes"} ago`
+    }
 
-        const days=Math.floor(hours/24)
+    const hours=Math.floor(minutes/60)
 
-        if(days<7){
-            return `${days} ${days===1?"day":"days"} ago`
-        }
+    if(hours<24){
+        return `${hours} ${hours===1?"hour":"hours"} ago`
+    }
 
-        const weeks=Math.floor(days/7)
+    const days=Math.floor(hours/24)
 
-        if(weeks<4){
-            return `${weeks} ${weeks===1?"week":"weeks"} ago`
-        }
+    if(days<7){
+        return `${days} ${days===1?"day":"days"} ago`
+    }
 
-        return new Date(post.createdAt).toLocaleDateString()
-    },[post.createdAt])
+    const weeks=Math.floor(days/7)
+
+    if(weeks<4){
+        return `${weeks} ${weeks===1?"week":"weeks"} ago`
+    }
+
+    return new Date(post.createdAt).toLocaleDateString()
+},[post.createdAt,now])
 
     const toggleLike=async()=>{
         if(loading) return
@@ -54,7 +65,7 @@ function PostCard({post}){
         try{
             setLoading(true)
 
-            const response=await apiFetch(`http://localhost:4000/api/v1/posts/${post._id}/like`,{
+            const response=await apiFetch(`${API_URL}/api/v1/posts/${post._id}/like`,{
                 method:"POST"
             })
 
@@ -81,7 +92,7 @@ function PostCard({post}){
         }
 
         try{
-            const response=await apiFetch(`http://localhost:4000/api/v1/posts/${post._id}/comments`,{
+            const response=await apiFetch(`${API_URL}/api/v1/posts/${post._id}/comments`,{
                 method:"GET"
             })
 
@@ -105,7 +116,7 @@ function PostCard({post}){
         try{
             setCommentLoading(true)
 
-            const response=await apiFetch(`http://localhost:4000/api/v1/posts/${post._id}/comments`,{
+            const response=await apiFetch(`${API_URL}/api/v1/posts/${post._id}/comments`,{
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"
@@ -122,10 +133,12 @@ function PostCard({post}){
                 return
             }
 
-            setComments((prevComments)=>[
-                ...prevComments,
-                data.comment
+           setComments((prevComments)=>[
+                    ...prevComments,
+                    data.comment
             ])
+
+            setCommentsCount((count)=>count+1)
 
             setCommentText("")
         }catch(error){
@@ -169,7 +182,7 @@ function PostCard({post}){
                         {showComments?"Hide comments":"Comments"}
                     </span>
                     <span className="action-count">
-                        {comments.length}
+                        {commentsCount}
                     </span>
                 </button>
             </div>

@@ -1,6 +1,7 @@
 import {useState,useEffect} from "react"
 import {apiFetch} from "../utils/api"
 import {useNavigate} from "react-router-dom"
+import API_URL from "../utils/config"
 function Profile(){
     const [posts,setPosts]=useState([])
     const [loading,setLoading]=useState(true)
@@ -82,7 +83,7 @@ try{
     try{
         setError("")
 
-        const response=await apiFetch(`http://localhost:4000/api/v1/posts/update/${editingPostId}`,{
+        const response=await apiFetch(`${API_URL}/api/v1/posts/update/${editingPostId}`,{
             method:"PATCH",
             headers:{
                 "Content-Type":"application/json"

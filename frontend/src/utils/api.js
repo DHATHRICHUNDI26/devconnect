@@ -1,3 +1,4 @@
+import API_URL from "./config.js"
 const refreshAccessToken=async()=>{
     const refreshToken=localStorage.getItem("refreshToken")
 
@@ -5,7 +6,7 @@ const refreshAccessToken=async()=>{
         return null
     }
 
-    const response=await fetch("http://localhost:4000/api/v1/users/refresh",{
+    const response=await fetch(`${API_URL}/api/v1/users/refresh`,{
         method:"POST",
         headers:{
             "Content-Type":"application/json"

@@ -2,6 +2,7 @@ import {useState,useEffect} from "react"
 import PostCard from "../components/PostCard"
 import {useNavigate} from "react-router-dom"
 import {apiFetch} from "../utils/api.js"
+import API_URL from "../utils/config.js"
 function Dashboard(){
     const navigate=useNavigate()
     const [posts,setPosts]=useState([])
@@ -16,7 +17,7 @@ function Dashboard(){
     useEffect(()=>{
         const getPosts=async()=>{
             try{
-                const response=await apiFetch("http://localhost:4000/api/v1/posts/getPosts",{
+                const response=await apiFetch(`${API_URL}/api/v1/posts/getPosts`,{
                     method:"GET",
                 })
                 const data=await response.json()
@@ -77,7 +78,7 @@ const searchUsers=async(value)=>{
     }
 
     try{
-        const response=await apiFetch(`http://localhost:4000/api/v1/users/search?username=${encodeURIComponent(value)}`,{
+        const response=await apiFetch(`${API_URL}/api/v1/users/search?username=${encodeURIComponent(value)}`,{
             method:"GET"
         })
 
@@ -99,7 +100,7 @@ const logout=async()=>{
         const refreshToken=localStorage.getItem("refreshToken")
 
         if(refreshToken){
-            await apiFetch("http://localhost:4000/api/v1/users/logout",{
+            await apiFetch(`${API_URL}/api/v1/users/logout`,{
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"
